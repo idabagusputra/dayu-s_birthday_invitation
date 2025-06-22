@@ -48,9 +48,8 @@ export default function Events() {
               transition={{ delay: 0.4 }}
               className="text-gray-500 max-w-md mx-auto"
             >
-              Gak terasa udah 20 tahun berlalu! Aku mau ngajak kalian semua —
-              teman-teman dan sahabat terbaik — buat seru-seruan bareng di hari
-              spesial ini 🎂✨
+              Aku mau ngajak kalian semua teman-teman dan sahabat terbaik buat
+              seru-seruan bareng di hari spesial ini 🎂✨
             </motion.p>
 
             {/* Decorative Line */}
