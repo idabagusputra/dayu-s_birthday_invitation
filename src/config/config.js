@@ -30,7 +30,7 @@ const config = {
       },
     ],
     audio: {
-      src: "/audio/ins.mp3", // or /audio/nature-sound.mp3
+      src: "/audio/back.mp3", // or /audio/nature-sound.mp3
       title: "Taylor Swift - Love Story - Instrumental ", // or Nature Sound
       autoplay: true,
       loop: true,
