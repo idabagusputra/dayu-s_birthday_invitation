@@ -9,27 +9,29 @@ const config = {
     parentGroom: "Bapak Groom & Ibu Groom",
     parentBride: "Bapak Bride & Ibu Bride",
     date: "2025-07-08",
-    maps_url: "https://goo.gl/maps/abcdef",
+    maps_url: "https://maps.app.goo.gl/fU1whrHuTe47uAhu8",
     maps_embed:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0000000000005!2d106.8270733147699!3d-6.175392995514422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f4f1b6d7b1e7%3A0x2e69f4f1b6d7b1e7!2sMonumen%20Nasional!5e0!3m2!1sid!2sid!4v1633666820004!5m2!1sid!2sid",
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.1976950361773!2d115.2447032!3d-8.672741!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd2417eb4cf3121%3A0x12d37fc6775de5de!2sBRON%20Cafe!5e0!3m2!1sid!2sid!4v1750601899576!5m2!1sid!2sid",
     time: "16:16 - 17:30 WIB",
-    location: "Grand Ballroom, Hotel Majesty",
-    address: "Jl. Jend. Sudirman No.1, Jakarta",
+    location: "BRON Cafe",
+    address:
+      "Jl. Hayam Wuruk No.136, Sumerta Kelod, Kec. Denpasar Tim., Kota Denpasar, Bali 80239",
     ogImage: "/images/og-image.jpg",
     favicon: "/images/favicon.ico",
     agenda: [
       {
-        title: "Ulang Tahun ke-20 🎈 ",
-        date: "2025-07-05",
+        title: "Birthday Party",
+        date: "2025-07-12",
         startTime: "16:16",
         endTime: "17:30",
-        location: "Grand Ballroom, Hotel Majesty",
-        address: "Jl. Jend. Sudirman No.1, Jakarta",
+        location: "BRON Cafe",
+        address:
+          "Jl. Hayam Wuruk No.136, Sumerta Kelod, Kec. Denpasar Tim., Kota Denpasar, Bali 80239",
       },
     ],
     audio: {
-      src: "/audio/fulfilling-humming.mp3", // or /audio/nature-sound.mp3
-      title: "Fulfilling Humming", // or Nature Sound
+      src: "/audio/ins.mp3", // or /audio/nature-sound.mp3
+      title: "Taylor Swift - Love Story - Instrumental ", // or Nature Sound
       autoplay: true,
       loop: true,
     },
