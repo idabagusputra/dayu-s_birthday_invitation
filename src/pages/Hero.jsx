@@ -149,7 +149,7 @@ export default function Hero() {
             </motion.h2>
           </div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -218,7 +218,7 @@ export default function Hero() {
 
             <div className="absolute -top-2 -right-2 w-16 sm:w-24 h-16 sm:h-24 bg-rose-100/20 rounded-full blur-xl" />
             <div className="absolute -bottom-2 -left-2 w-16 sm:w-24 h-16 sm:h-24 bg-rose-100/20 rounded-full blur-xl" />
-          </motion.div>
+          </motion.div> */}
 
           <CountdownTimer targetDate={config.data.date} />
 
