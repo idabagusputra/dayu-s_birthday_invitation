@@ -1,4 +1,4 @@
-import { Calendar, Clock, Heart, Sparkles } from "lucide-react";
+import { Calendar, Clock, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import config from "@/config/config";
@@ -25,7 +25,6 @@ export default function Hero() {
 
   const CountdownTimer = ({ targetDate }) => {
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
     function calculateTimeLeft() {
       const difference = +new Date(targetDate) - +new Date();
       let timeLeft = {};
@@ -40,7 +39,6 @@ export default function Hero() {
       }
       return timeLeft;
     }
-
     useEffect(() => {
       const timer = setInterval(() => {
         setTimeLeft(calculateTimeLeft());
@@ -49,131 +47,60 @@ export default function Hero() {
     }, [targetDate]);
 
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-8"
-      >
-        {Object.keys(timeLeft).map((interval, index) => (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
+        {Object.keys(timeLeft).map((interval) => (
           <motion.div
             key={interval}
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1.4 + index * 0.1 }}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 20px 25px -5px rgba(236, 72, 153, 0.2)",
-            }}
-            className="flex flex-col items-center p-3 sm:p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-rose-100/50 shadow-lg relative overflow-hidden"
+            className="flex flex-col items-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-rose-100"
           >
-            {/* Sparkle effect */}
-            <motion.div
-              animate={{
-                scale: [0, 1, 0],
-                rotate: [0, 180, 360],
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: index * 0.5,
-              }}
-              className="absolute top-1 right-1"
-            >
-              <Sparkles className="w-3 h-3 text-yellow-300/60" />
-            </motion.div>
-
-            <motion.span
-              className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-rose-500 to-pink-600 bg-clip-text text-transparent"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-            >
-              {timeLeft[interval] || 0}
-            </motion.span>
-            <span className="text-xs text-gray-500 capitalize font-medium">
-              {interval}
+            <span className="text-xl sm:text-2xl font-bold text-rose-600">
+              {timeLeft[interval]}
             </span>
-          </motion.div>
-        ))}
-      </motion.div>
-    );
-  };
-
-  const FloatingHearts = () => {
-    const hearts = Array.from({ length: 8 }, (_, i) => i);
-
-    return (
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {hearts.map((i) => (
-          <motion.div
-            key={i}
-            initial={{
-              opacity: 0,
-              scale: 0,
-              x:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerWidth : 1200),
-              y: typeof window !== "undefined" ? window.innerHeight : 800,
-            }}
-            animate={{
-              opacity: [0, 1, 1, 0],
-              scale: [0, 1, 1, 0.5],
-              x:
-                Math.random() *
-                (typeof window !== "undefined" ? window.innerWidth : 1200),
-              y: -100,
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              delay: i * 1.2,
-              ease: "easeOut",
-            }}
-            className="absolute"
-          >
-            <Heart
-              className={`w-${Math.floor(Math.random() * 2) + 6} h-${Math.floor(Math.random() * 2) + 6} ${
-                i % 3 === 0
-                  ? "text-rose-400/60"
-                  : i % 3 === 1
-                    ? "text-pink-400/60"
-                    : "text-red-400/60"
-              }`}
-              fill="currentColor"
-            />
+            <span className="text-xs text-gray-500 capitalize">{interval}</span>
           </motion.div>
         ))}
       </div>
     );
   };
 
-  const SparkleEffect = () => {
-    const sparkles = Array.from({ length: 6 }, (_, i) => i);
-
+  const FloatingHearts = () => {
     return (
-      <div className="absolute inset-0 pointer-events-none">
-        {sparkles.map((i) => (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute"
-            style={{
-              left: `${20 + i * 12}%`,
-              top: `${30 + (i % 2) * 40}%`,
+            initial={{
+              opacity: 0,
+              scale: 0,
+              x: Math.random() * window.innerWidth,
+              y: window.innerHeight,
             }}
             animate={{
-              scale: [0, 1, 0],
-              rotate: [0, 180, 360],
-              opacity: [0, 1, 0],
+              opacity: [0, 1, 1, 0],
+              scale: [0, 1, 1, 0.5],
+              x: Math.random() * window.innerWidth,
+              y: -100,
             }}
             transition={{
-              duration: 3,
+              duration: 4,
               repeat: Infinity,
-              delay: i * 0.5,
-              ease: "easeInOut",
+              delay: i * 0.8,
+              ease: "easeOut",
             }}
+            className="absolute"
           >
-            <Sparkles className="w-4 h-4 text-yellow-300/60" />
+            <Heart
+              className={`w-${Math.floor(Math.random() * 2) + 8} h-${Math.floor(Math.random() * 2) + 8} ${
+                i % 3 === 0
+                  ? "text-rose-400"
+                  : i % 3 === 1
+                    ? "text-pink-400"
+                    : "text-red-400"
+              }`}
+              fill="currentColor"
+            />
           </motion.div>
         ))}
       </div>
@@ -186,42 +113,6 @@ export default function Hero() {
         id="home"
         className="min-h-screen flex flex-col items-center justify-center px-4 py-16 sm:py-5 text-center relative overflow-hidden"
       >
-        {/* Enhanced Decorative Background */}
-        <div className="absolute inset-0" />
-
-        {/* Animated gradient orbs */}
-        <motion.div
-          className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-pink-200/30 to-rose-300/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{ transform: "translate(50%, -50%)" }}
-        />
-
-        <motion.div
-          className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-tr from-purple-200/30 to-pink-300/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.4, 0.2, 0.4],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{ transform: "translate(-50%, 50%)" }}
-        />
-
-        {/* Floating Elements */}
-        <FloatingHearts />
-        <SparkleEffect />
-
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -234,39 +125,25 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             className="inline-block mx-auto"
           >
-            <motion.span
-              className="px-6 py-2 text-sm bg-gradient-to-r from-rose-50 to-pink-50 text-rose-600 rounded-full border border-rose-200/50 shadow-lg backdrop-blur-sm"
-              animate={{
-                boxShadow: [
-                  "0 4px 6px -1px rgba(236, 72, 153, 0.1)",
-                  "0 10px 15px -3px rgba(236, 72, 153, 0.2)",
-                  "0 4px 6px -1px rgba(236, 72, 153, 0.1)",
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              ✨ Tanggal Acara Ada di Bagian Event ya! ✨
-            </motion.span>
+            <span className="px-4 py-1 text-sm bg-rose-50 text-rose-600 rounded-full border border-rose-200">
+              ✨ Tanggal Cantik Acara Ada di Bagian Event ya! ✨
+            </span>
           </motion.div>
 
           <div className="space-y-4">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-gray-500 font-light italic text-base sm:text-lg"
+            ></motion.p>
             <motion.h2
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-4xl sm:text-6xl font-serif bg-gradient-to-r from-rose-500 to-pink-600 bg-clip-text text-transparent leading-tight relative"
+              className="text-3xl sm:text-5xl font-serif bg-clip-text font-serif text-rose-600 leading-tight"
             >
               {config.data.groomName}
-              <motion.span
-                className="absolute -top-2 -right-2 text-3xl"
-                animate={{
-                  rotate: [0, 15, -15, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                🎂
-              </motion.span>
             </motion.h2>
           </div>
 
@@ -276,43 +153,22 @@ export default function Hero() {
             transition={{ delay: 0.8 }}
             className="relative max-w-md mx-auto"
           >
-            <motion.div
-              className="absolute inset-0 "
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 25px 50px -12px rgba(236, 72, 153, 0.25)",
-              }}
-            />
+            <div className="absolute inset-0 bg-gradient-to-b from-rose-50/50 to-white/50 backdrop-blur-md rounded-2xl" />
 
-            <div className="relative px-6 sm:px-8 py-8 sm:py-6 rounded-3xl shadow-2xl">
-              {/* Cute corner decorations */}
-              <div className="absolute top-3 left-3 text-pink-300/60 text-2xl">
-                🎀
-              </div>
-              <div className="absolute top-3 right-3 text-pink-300/60 text-2xl">
-                🎀
-              </div>
-              <div className="absolute bottom-3 left-3 text-rose-300/60 text-2xl">
-                🌸
-              </div>
-              <div className="absolute bottom-3 right-3 text-rose-300/60 text-2xl">
-                🌸
+            <div className="relative px-4 sm:px-8 py-8 sm:py-5 rounded-2xl border border-rose-100/50">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-px">
+                <div className="w-20 sm:w-32 h-[2px] bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
               </div>
 
               <div className="space-y-6 text-center">
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.9 }}
-                    className="flex items-center justify-center space-x-3 bg-gradient-to-r from-white/90 to-pink-50/90 px-6 py-3 rounded-2xl border border-pink-200/50 shadow-lg"
+                    className="flex items-center justify-center space-x-2"
                   >
-                    <motion.div
-                      animate={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      <Calendar className="w-5 h-5 text-rose-500" />
-                    </motion.div>
+                    <Calendar className="w-4 h-4 text-rose-400" />
                     <span className="text-gray-700 font-medium text-sm sm:text-base">
                       {formatEventDate(config.data.date, "full")}
                     </span>
@@ -322,78 +178,53 @@ export default function Hero() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
-                    className="flex items-center justify-center space-x-3 bg-gradient-to-r from-white/90 to-purple-50/90 px-6 py-3 rounded-2xl border border-purple-200/50 shadow-lg"
+                    className="flex items-center justify-center space-x-2"
                   >
-                    <motion.div
-                      animate={{ rotate: [0, -10, 10, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-                    >
-                      <Clock className="w-5 h-5 text-purple-500" />
-                    </motion.div>
+                    <Clock className="w-4 h-4 text-rose-400" />
                     <span className="text-gray-700 font-medium text-sm sm:text-base">
                       {config.data.time}
                     </span>
                   </motion.div>
                 </div>
 
-                {/* Enhanced divider with cute elements */}
                 <div className="flex items-center justify-center gap-3">
-                  <motion.div
-                    className="text-pink-400 text-xl"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    🎈
-                  </motion.div>
-                  <div className="h-px w-8 sm:w-12 bg-gradient-to-r from-transparent via-rose-300 to-transparent" />
-                  <motion.div
-                    className="w-3 h-3 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shadow-lg"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  <div className="h-px w-8 sm:w-12 bg-gradient-to-r from-transparent via-rose-300 to-transparent" />
-                  <motion.div
-                    className="text-pink-400 text-xl"
-                    animate={{ rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  >
-                    🎈
-                  </motion.div>
+                  <div className="h-px w-8 sm:w-12 bg-rose-200/50" />
+                  <div className="w-2 h-2 rounded-full bg-rose-200" />
+                  <div className="h-px w-8 sm:w-12 bg-rose-200/50" />
                 </div>
 
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 1.1 }}
-                  className="space-y-3"
+                  className="space-y-2"
                 >
                   <p className="text-gray-500 font-serif italic text-sm">
                     Kepada Teman Tercinta
                   </p>
-                  <motion.p
-                    className="text-rose-500 font-semibold font-serif text-lg leading-tight"
-                    animate={{
-                      textShadow: [
-                        "0 0 0px rgba(236, 72, 153, 0)",
-                        "0 0 10px rgba(236, 72, 153, 0.3)",
-                        "0 0 0px rgba(236, 72, 153, 0)",
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
+                  <p className="text-gray-600 font-medium text-sm"></p>
+                  <p className="text-rose-500 font-semibold font-serif text-rose-600 leading-tight">
                     {guestName ? guestName : "Dayu's Lovely Friends"}
-                  </motion.p>
+                  </p>
                 </motion.div>
               </div>
+
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-px">
+                <div className="w-20 sm:w-32 h-[2px] bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
+              </div>
             </div>
+
+            <div className="absolute -top-2 -right-2 w-16 sm:w-24 h-16 sm:h-24 bg-rose-100/20 rounded-full blur-xl" />
+            <div className="absolute -bottom-2 -left-2 w-16 sm:w-24 h-16 sm:h-24 bg-rose-100/20 rounded-full blur-xl" />
           </motion.div>
 
           <CountdownTimer targetDate={config.data.date} />
 
           <div className="pt-6 relative">
+            <FloatingHearts />
             <motion.div
               animate={{
-                scale: [1, 1.2, 1],
+                scale: [1, 1.1, 1],
                 rotate: [0, 5, -5, 0],
               }}
               transition={{
@@ -403,7 +234,7 @@ export default function Hero() {
               }}
             >
               <Heart
-                className="w-12 sm:w-16 h-12 sm:h-16 text-rose-500 mx-auto drop-shadow-lg"
+                className="w-10 sm:w-12 h-10 sm:h-12 text-rose-500 mx-auto"
                 fill="currentColor"
               />
             </motion.div>
