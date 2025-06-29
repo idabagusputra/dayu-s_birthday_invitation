@@ -68,7 +68,25 @@ export default function Events() {
             </motion.div>
           </motion.div>
 
-          {/* Events Grid */}
+          {/* Dress Code Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mb-10"
+          >
+            <div className="flex justify-between items-center w-full bg-pink-50 px-6 py-4 rounded-full border border-rose-200">
+              <div className="w-3 h-3 bg-rose-500 rounded-full"></div>
+              <span className="text-gray-700 font-medium text-center flex-1">
+                Dress Code:{" "}
+                <span className="text-pink-600 font-semibold">Pink</span>
+              </span>
+              <div className="w-3 h-3 bg-rose-500 rounded-full"></div>
+            </div>
+          </motion.div>
+
+          {/* Events Grid
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -77,7 +95,7 @@ export default function Events() {
             className="max-w-2xl mx-auto"
           >
             <EventCards events={config.data.agenda} />
-          </motion.div>
+          </motion.div> */}
         </motion.div>
       </section>
     </>
