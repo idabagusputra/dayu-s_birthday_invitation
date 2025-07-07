@@ -126,7 +126,7 @@ export default function Hero() {
             className="inline-block mx-auto"
           >
             <span className="px-4 py-1 text-sm bg-rose-50 text-rose-600 rounded-full border border-rose-200">
-              ✨ Tanggal Cantik Acara Ada di Bagian Event ya! ✨
+              ✨ Lokasi Acara Ada Dibawah ya! ✨
             </span>
           </motion.div>
 
