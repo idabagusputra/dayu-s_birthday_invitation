@@ -9,7 +9,7 @@ const config = {
     brideName: "",
     parentGroom: "Bapak Groom & Ibu Groom",
     parentBride: "Bapak Bride & Ibu Bride",
-    date: "2025-07-08",
+    date: "2025-07-12",
     dateday: "2025-07-12",
     maps_url: "https://maps.app.goo.gl/fU1whrHuTe47uAhu8",
     maps_embed:
