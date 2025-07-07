@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
-import Marquee from "@/components/ui/marquee";
 import {
   Calendar,
   Clock,
@@ -14,7 +13,6 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { formatEventDate } from "@/lib/formatEventDate";
 
 export default function Wishes() {
   const [showConfetti, setShowConfetti] = useState(false);
@@ -23,47 +21,89 @@ export default function Wishes() {
   const [attendance, setAttendance] = useState("");
   const [name, setName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Load data from localStorage on component mount
-  const [wishes, setWishes] = useState(() => {
-    if (typeof window !== "undefined") {
-      const savedWishes = localStorage.getItem("wishes");
-      return savedWishes
-        ? JSON.parse(savedWishes)
-        : [
-            // {
-            //   id: 1,
-            //   name: "John Doe",
-            //   message:
-            //     "Wishing you both a lifetime of love, laughter, and happiness! 🎉",
-            //   timestamp: "2024-12-24T23:20:00Z",
-            //   attending: "attending",
-            // },
-            // {
-            //   id: 2,
-            //   name: "Natalie",
-            //   message:
-            //     "Wishing you both a lifetime of love, laughter, and happiness! 🎉",
-            //   timestamp: "2024-12-24T23:20:00Z",
-            //   attending: "attending",
-            // },
-            // {
-            //   id: 3,
-            //   name: "Abdur Rofi",
-            //   message:
-            //     "Congratulations on your special day! May Allah bless your union! 🤲",
-            //   timestamp: "2024-12-25T23:08:09Z",
-            //   attending: "maybe",
-            // },
-          ];
+  // Format date function
+  const formatEventDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+  const JSONBIN_URL = "https://api.jsonbin.io/v3/b/686b6fd88a456b7966bcabde"; // Ganti dengan Bin ID Anda
+  const JSONBIN_ACCESS_KEY =
+    "$2a$10$Z3/UrdIDYGaOhT0E1cY63uHRFxPu3IC30dnHhGIjb4QxYmdVKfdA."; // Ganti dengan Access Key Anda
+
+  // Cloud storage functions
+  const saveToCloud = async (data) => {
+    try {
+      const response = await fetch(JSONBIN_URL, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Access-Key": JSONBIN_ACCESS_KEY,
+        },
+        body: JSON.stringify({ wishes: data }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error saving to cloud:", error);
+      // Fallback to localStorage if cloud fails
+      localStorage.setItem("wishes", JSON.stringify(data));
     }
-    return [];
-  });
+  };
 
-  // Save to localStorage whenever wishes change
+  const loadFromCloud = async () => {
+    try {
+      const response = await fetch(JSONBIN_URL + "/latest", {
+        headers: {
+          "X-Access-Key": JSONBIN_ACCESS_KEY,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.record.wishes || [];
+    } catch (error) {
+      console.error("Error loading from cloud:", error);
+      // Fallback to localStorage if cloud fails
+      const savedWishes = localStorage.getItem("wishes");
+      return savedWishes ? JSON.parse(savedWishes) : [];
+    }
+  };
+
+  // Load data from cloud on component mount
+  const [wishes, setWishes] = useState([]);
+
   useEffect(() => {
-    localStorage.setItem("wishes", JSON.stringify(wishes));
-  }, [wishes]);
+    const loadWishes = async () => {
+      setIsLoading(true);
+      const loadedWishes = await loadFromCloud();
+      setWishes(loadedWishes);
+      setIsLoading(false);
+    };
+
+    loadWishes();
+  }, []);
+
+  // Save to cloud whenever wishes change
+  useEffect(() => {
+    if (wishes.length > 0 && !isLoading) {
+      saveToCloud(wishes);
+    }
+  }, [wishes, isLoading]);
 
   const options = [
     { value: "attending", label: "Ya, saya akan hadir" },
@@ -71,15 +111,14 @@ export default function Wishes() {
     { value: "maybe", label: "Mungkin, saya akan konfirmasi nanti" },
   ];
 
-  const handleSubmitWish = async (e) => {
-    e.preventDefault();
+  const handleSubmitWish = async () => {
     if (!newWish.trim() || !name.trim()) return;
 
     setIsSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const newWishObj = {
-      id: Date.now(), // Better unique ID
+      id: Date.now(),
       name: name,
       message: newWish,
       attending: attendance || "attending",
@@ -108,8 +147,36 @@ export default function Wishes() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <section id="wishes" className="min-h-screen relative overflow-hidden">
+        <div className="container mx-auto px-4 py-20 relative z-10">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto mb-4"></div>
+              <p className="text-gray-500">Memuat pesan...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
+      <style>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
       <section id="wishes" className="min-h-screen relative overflow-hidden">
         {showConfetti && <Confetti recycle={false} numberOfPieces={200} />}
         <div className="container mx-auto px-4 py-20 relative z-10">
@@ -153,52 +220,57 @@ export default function Wishes() {
 
           {/* Wishes List */}
           <div className="max-w-2xl mx-auto space-y-6">
-            <AnimatePresence>
-              <Marquee
-                speed={20}
-                gradient={false}
-                className="[--duration:20s] py-2"
-              >
-                {wishes.map((wish) => (
-                  <motion.div
-                    key={wish.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="group relative w-[280px]"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-rose-100/50 to-pink-100/50 rounded-xl transform transition-transform group-hover:scale-[1.02] duration-300" />
-                    <div className="relative backdrop-blur-sm bg-white/80 p-4 rounded-xl border border-rose-100/50 shadow-md">
-                      <div className="flex items-start space-x-3 mb-2">
-                        <div className="flex-shrink-0">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center text-white text-sm font-medium">
-                            {wish.name[0].toUpperCase()}
+            {wishes.length === 0 ? (
+              <div className="text-center py-12">
+                <MessageCircle className="w-16 h-16 text-rose-200 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">
+                  Belum ada pesan. Jadilah yang pertama!
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-hidden">
+                <div className="animate-marquee flex gap-6">
+                  {wishes.concat(wishes).map((wish, index) => (
+                    <motion.div
+                      key={`${wish.id}-${index}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="group relative w-[280px] flex-shrink-0"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-rose-100/50 to-pink-100/50 rounded-xl transform transition-transform group-hover:scale-[1.02] duration-300" />
+                      <div className="relative backdrop-blur-sm bg-white/80 p-4 rounded-xl border border-rose-100/50 shadow-md">
+                        <div className="flex items-start space-x-3 mb-2">
+                          <div className="flex-shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-rose-400 to-pink-400 flex items-center justify-center text-white text-sm font-medium">
+                              {wish.name[0].toUpperCase()}
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2">
+                              <h4 className="font-medium text-gray-800 text-sm truncate">
+                                {wish.name}
+                              </h4>
+                              {getAttendanceIcon(wish.attending)}
+                            </div>
+                            <div className="flex items-center space-x-1 text-gray-500 text-xs">
+                              <Clock className="w-3 h-3" />
+                              <time className="truncate">
+                                {formatEventDate(wish.timestamp)}
+                              </time>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2">
-                            <h4 className="font-medium text-gray-800 text-sm truncate">
-                              {wish.name}
-                            </h4>
-                            {getAttendanceIcon(wish.attending)}
-                          </div>
-                          <div className="flex items-center space-x-1 text-gray-500 text-xs">
-                            <Clock className="w-3 h-3" />
-                            <time className="truncate">
-                              {formatEventDate(wish.timestamp)}
-                            </time>
-                          </div>
-                        </div>
+                        <p className="text-gray-600 text-sm leading-relaxed mb-2 line-clamp-3">
+                          {wish.message}
+                        </p>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed mb-2 line-clamp-3">
-                        {wish.message}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </Marquee>
-            </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Wishes Form */}
@@ -208,7 +280,7 @@ export default function Wishes() {
             transition={{ delay: 0.5 }}
             className="max-w-2xl mx-auto mt-12"
           >
-            <form onSubmit={handleSubmitWish} className="relative">
+            <div onSubmit={handleSubmitWish} className="relative">
               <div className="backdrop-blur-sm bg-white/80 p-6 rounded-2xl border border-rose-100/50 shadow-lg">
                 <div className="space-y-2">
                   <div className="space-y-2">
@@ -312,12 +384,14 @@ export default function Wishes() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={handleSubmitWish}
                     className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl text-white font-medium transition-all duration-200
                                             ${
                                               isSubmitting
                                                 ? "bg-gray-300 cursor-not-allowed"
-                                                : "background-color: bg-rose-500 hover:bg-rose-600"
+                                                : "bg-rose-500 hover:bg-rose-600"
                                             }`}
+                    disabled={isSubmitting}
                   >
                     <Send className="w-4 h-4" />
                     <span>
@@ -326,7 +400,7 @@ export default function Wishes() {
                   </motion.button>
                 </div>
               </div>
-            </form>
+            </div>
           </motion.div>
         </div>
       </section>
